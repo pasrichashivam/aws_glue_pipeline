@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "glue_job" {
-  bucket = var.glue_name
+  bucket = var.glue_job
 
   role_arn = "arn:aws:iam::${var.account}:role/${var.app_role_name}"
   glue_version = "4.0"
