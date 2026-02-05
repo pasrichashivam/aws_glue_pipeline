@@ -21,7 +21,6 @@ with ZipFile(f'{base_path}pyfiles.zip', 'r') as zip_ref:
     zip_ref.extractall(f'{base_path}extracted')
 
 
-
 sys.path.append(f'{base_path}extracted')
 
 input_path = f"s3://raw-bucket-{env}-source/data/leagues.csv"
