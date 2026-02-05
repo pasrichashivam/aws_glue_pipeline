@@ -29,7 +29,7 @@ pipeline {
         script {
           sh "chmod +x -R ${env.SHELL_SCRIPTS_PATH}"
 
-          if (!env.BITBUCKET_REPO) {
+          if (!env.BRANCH_NAME) {
             env.TARGET_BRANCH = env.ENV
             echo "THIS IS MANUAL DEPLOYMENT ON ${env.TARGET_BRANCH}"
           } else {
