@@ -1,6 +1,7 @@
 environment = "pro"
 account = "656435923965"
 source_bucket = "raw-bucket-pro-source"
-artifacts_bucket = "emr-app-artifacts-pro"
+artifacts_bucket = "glue-job-artifacts-pro"
 airflow_bucket = "s3-apps-airflow-pro"
 catalog_bucket = "glue-catalog-bucket-pro"
+glue_job = "teams_glue_job"

@@ -1,25 +1,13 @@
-def setEnvByBranch(String branchName) {
-    if (branchName == 'develop') {
-        env.ENVIRONMENT = 'dev'
-    } else if (branchName=='stage') {
-        env.ENVIRONMENT = 'stage'
-    } else if (branchName=='production') {
-        env.ENVIRONMENT = 'pro'
-    }
-}
+def MODULES = [:]
 
 pipeline {
   agent any
   environment{
     CICD_PARAMS_FOLDER = "${env.WORKSPACE}/cicd/parameters"
     SHELL_SCRIPTS_PATH = "${env.WORKSPACE}/cicd/scripts"
-    EMR_ARTIFACT_PATH = "${env.WORKSPACE}/artifact"
+    ARTIFACT_PATH = "${env.WORKSPACE}/artifact"
     INFRA_PATH = "${env.WORKSPACE}/infra"
     DAGS_PATH = "${env.WORKSPACE}/dags"
-  }
-
-  parameters {
-    choice(name: 'ENV', choices: ['develop', 'production'])
   }
 
   stages {
@@ -41,7 +29,7 @@ pipeline {
             env.TARGET_BRANCH = env.BRANCH_NAME
             echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}"
           }
-          setEnvByBranch(env.TARGET_BRANCH)
+          MODULES.select_environment("${env.TARGET_BRANCH}")
           echo "SET ENV ON ${env.ENVIRONMENT}"
         }
       }
@@ -86,18 +74,18 @@ pipeline {
         }
       }
     }
-    stage("Create EMR Serverless artifact") {
+    stage("Create artifacts") {
       steps {
         script {
-          echo "Createing EMR job artifacts"
-          sh "${env.SHELL_SCRIPTS_PATH}/create_emr_zip.sh"
+          echo "Createing Glue job artifacts"
+          sh "${env.SHELL_SCRIPTS_PATH}/package_pyfiles.sh"
         }
       }
     }
 
     stage("Copy Artifacts to S3") {
       steps {
-          sh "aws s3 cp ${env.EMR_ARTIFACT_PATH} s3://${env.ARTIFACTS_BUCKET}/${env.APP_NAME}/ --recursive"
+          sh "aws s3 cp ${env.ARTIFACT_PATH} s3://${env.ARTIFACTS_BUCKET}/glue_jobs/${env.APP_NAME}/ --recursive"
       }
     }
 

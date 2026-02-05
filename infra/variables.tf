@@ -29,3 +29,7 @@ variable account {
 variable catalog_bucket {
     type = string
 }
+
+variable glue_job {
+    type = string
+}

@@ -1,6 +1,7 @@
 environment = "dev"
 account = "656435923965"
 source_bucket = "raw-bucket-dev-source"
-artifacts_bucket = "emr-app-artifacts-dev"
+artifacts_bucket = "glue-job-artifacts-dev"
 airflow_bucket = "s3-apps-airflow-dev"
 catalog_bucket = "glue-catalog-bucket-dev"
+glue_job = "teams_glue_job"

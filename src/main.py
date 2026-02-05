@@ -1,19 +1,26 @@
 
 import sys
-import os
 from pyspark.sql import SparkSession
+from awsglue_utils import getResolvedOptions
 from zipfile import ZipFile
+import chispa
 
-print("sys.executable:", sys.executable)
-print("PYSPARK_PYTHON:", os.environ.get("PYSPARK_PYTHON"))
-print("PYSPARK_DRIVER_PYTHON:", os.environ.get("PYSPARK_DRIVER_PYTHON"))
-print("ENV:", os.environ.get("app_env"))
+print("Chispa: ", chispa.__version__)
 
-with ZipFile('/home/hadoop/pyfiles.zip', 'r') as zip_ref:
-    zip_ref.extractall("/home/hadoop/")
+args = getResolvedOptions(sys.argv, ['ENV', 'script_args'])
 
-env = os.environ.get("app_env")
-spark = SparkSession.builder.appName("emr-serverless-job").enableHiveSupport().getOrCreate()
+spark = SparkSession.builder.appName("glue-job").enableHiveSupport().getOrCreate()
+env = args['ENV']
+script_args = args['script_args']
+
+print("ENV:", env)
+print("script_args:", script_args)
+
+base_path = '/tmp/'
+with ZipFile(f'{base_path}pyfiles.zip', 'r') as zip_ref:
+    zip_ref.extractall(f'{base_path}extracted')
+
+sys.path.append(f'{base_path}extracted')
 
 input_path = f"s3://raw-bucket-{env}-source/data/leagues.csv"
 output_db = f"{env}_analytics"

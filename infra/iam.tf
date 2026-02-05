@@ -1,12 +1,13 @@
-resource "aws_iam_role" "emr_serverless_role" {
+resource "aws_iam_role" "glue_job_role" {
   name = local.app_role_name
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
+    Statement = [
+      {
       Effect = "Allow"
       Principal = {
-        Service = "emr-serverless.amazonaws.com"
+        Service = "glue.amazonaws.com"
       }
       Action = "sts:AssumeRole"
     }]
@@ -16,8 +17,8 @@ resource "aws_iam_role" "emr_serverless_role" {
   }
 }
 
-resource "aws_iam_policy" "emr_policy" {
-  name = "emr-serverless-policy"
+resource "aws_iam_policy" "glue_job_policy" {
+  name = "teams-glue-job-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -32,9 +33,7 @@ resource "aws_iam_policy" "emr_policy" {
         ]
         Resource = [
           "arn:aws:s3:::${var.source_bucket}/*",
-          "arn:aws:s3:::${var.artifacts_bucket}/*",
-          "arn:aws:s3:::${var.catalog_bucket}/*",
-          "arn:aws:s3:::${var.catalog_bucket}"
+          "arn:aws:s3:::${var.artifacts_bucket}/*"
         ]
       },
       {
@@ -52,12 +51,21 @@ resource "aws_iam_policy" "emr_policy" {
           "logs:*"
         ]
         Resource = "*"
+      },
+      {
+        Sid    = "SES"
+        Effect = "Allow"
+        Action = [
+          "ses:SendEmail",
+          "ses:SendRawEmail"
+        ]
+        Resource = "*"
       }
     ]
   })
 }
 
 resource "aws_iam_role_policy_attachment" "attach_policy" {
-  role       = aws_iam_role.emr_serverless_role.name
-  policy_arn = aws_iam_policy.emr_policy.arn
+  role       = aws_iam_role.glue_job_role.name
+  policy_arn = aws_iam_policy.glue_job_policy.arn
 }

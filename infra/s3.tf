@@ -7,7 +7,6 @@ resource "aws_s3_bucket" "artifacts" {
   }
 }
 
-
 resource "aws_s3_bucket" "airflow" {
   bucket = var.airflow_bucket
 
