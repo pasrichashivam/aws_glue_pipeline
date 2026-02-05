@@ -1,0 +1,36 @@
+pipeline {
+  agent any
+
+  environment {
+    AWS_REGION = "us-east-1"
+    ENV = "dev"
+  }
+
+  stages {
+
+    stage("Checkout") {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage("Terraform Init & Apply") {
+      steps {
+        sh """
+          cd terraform
+          terraform init
+          terraform apply -var-file=env/${ENV}.tfvars -auto-approve
+        """
+      }
+    }
+
+    stage("Package Python Dependencies") {
+      steps {
+        sh """
+          chmod +x scripts/package_dependencies.sh
+          ./scripts/package_dependencies.sh ${ENV}
+        """
+      }
+    }
+  }
+}

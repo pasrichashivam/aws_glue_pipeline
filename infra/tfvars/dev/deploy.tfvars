@@ -1,0 +1,6 @@
+environment = "dev"
+account = "656435923965"
+source_bucket = "raw-bucket-dev-source"
+artifacts_bucket = "emr-app-artifacts-dev"
+airflow_bucket = "s3-apps-airflow-dev"
+catalog_bucket = "glue-catalog-bucket-dev"

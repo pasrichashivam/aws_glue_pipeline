@@ -1,0 +1,6 @@
+environment = "pro"
+account = "656435923965"
+source_bucket = "raw-bucket-pro-source"
+artifacts_bucket = "emr-app-artifacts-pro"
+airflow_bucket = "s3-apps-airflow-pro"
+catalog_bucket = "glue-catalog-bucket-pro"
