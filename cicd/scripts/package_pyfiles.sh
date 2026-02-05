@@ -33,6 +33,9 @@ if [ -d "${workspace_source_path}" ]; then
     echo -e ${NOCOLOR} $(date) ${SCRIPT_LOG_STAMP} "move main.py file to root";
     mv "${workspace_source_path}/main.py" "${WORKSPACE}/artifact" || create_artifacts_error=true;
 
+    echo -e ${NOCOLOR} $(date) ${SCRIPT_LOG_STAMP} "move requirements.txt file to root";
+    mv "${workspace_source_path}/requirements.txt" "${WORKSPACE}/artifact" || create_artifacts_error=true;
+
     echo -e ${NOCOLOR} $(date) ${SCRIPT_LOG_STAMP} "creating zip from src ...";
     cd "${workspace_source_path}"
     zip -u -q -r "${workspace_source_path}/${src_file_name}" . --include '*.py' \
