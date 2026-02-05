@@ -1,5 +1,12 @@
-def MODULES = [:]
-
+def setEnvByBranch(String branchName) {
+    if (branchName == 'develop') {
+        env.ENVIRONMENT = 'dev'
+    } else if (branchName=='stage') {
+        env.ENVIRONMENT = 'stage'
+    } else if (branchName=='production') {
+        env.ENVIRONMENT = 'pro'
+    }
+}
 pipeline {
   agent any
   environment{
@@ -29,7 +36,7 @@ pipeline {
             env.TARGET_BRANCH = env.BRANCH_NAME
             echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}"
           }
-          MODULES.select_environment("${env.TARGET_BRANCH}")
+          setEnvByBranch("${env.TARGET_BRANCH}")
           echo "SET ENV ON ${env.ENVIRONMENT}"
         }
       }
