@@ -15,6 +15,7 @@ script_args = args['script_args']
 
 print("ENV:", env)
 print("script_args:", script_args)
+
 base_path = '/tmp/'
 with ZipFile(f'{base_path}pyfiles.zip', 'r') as zip_ref:
     zip_ref.extractall(f'{base_path}extracted')
