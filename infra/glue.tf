@@ -1,4 +1,4 @@
-resource "aws_s3_bucket" "glue_job" {
+resource "aws_glue_job" "glue_job" {
   bucket = var.glue_job
 
   role_arn = "arn:aws:iam::${var.account}:role/${var.app_role_name}"
