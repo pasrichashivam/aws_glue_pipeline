@@ -23,25 +23,28 @@ pipeline {
         checkout scm
       }
     }
-
     stage("Branch Configuration") {
-      steps {
-        script {
-          sh "chmod +x -R ${env.SHELL_SCRIPTS_PATH}"
-
-          if (!env.BRANCH_NAME) {
-            env.TARGET_BRANCH = env.ENV
-            echo "THIS IS MANUAL DEPLOYMENT ON ${env.TARGET_BRANCH}"
+      steps { 
+        script { 
+          sh "chmod +x -R ${env.SHELL_SCRIPTS_PATH}" 
+          if (!env.BRANCH_NAME) { 
+            env.TARGET_BRANCH = "develop" // or some default 
+            echo "THIS IS MANUAL DEPLOYMENT ON ${env.TARGET_BRANCH}" 
           } else {
-            env.TARGET_BRANCH = env.BRANCH_NAME
-            echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}"
-          }
-          setEnvByBranch("${env.TARGET_BRANCH}")
-          echo "SET ENV ON ${env.ENVIRONMENT}"
-        }
-      }
+            env.TARGET_BRANCH = env.BRANCH_NAME 
+            echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}" 
+          } 
+          if (env.TARGET_BRANCH == 'develop') {
+            env.ENVIRONMENT = 'dev' 
+          } else if (env.TARGET_BRANCH == 'stage') {
+            env.ENVIRONMENT = 'stage' 
+          } else if (env.TARGET_BRANCH == 'production') {
+            env.ENVIRONMENT = 'pro' 
+          } 
+          echo "SET ENV ON ${env.ENVIRONMENT}" 
+        } 
+      } 
     }
-
     stage("Setting Environment Variables") {
       steps {
         script{
