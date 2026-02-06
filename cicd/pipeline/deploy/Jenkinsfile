@@ -87,7 +87,7 @@ pipeline {
     stage("Create artifacts") {
       steps {
         script {
-          echo "Createing Glue job artifacts"
+          echo "Creating Glue job artifacts"
           sh "${env.SHELL_SCRIPTS_PATH}/package_pyfiles.sh"
         }
       }

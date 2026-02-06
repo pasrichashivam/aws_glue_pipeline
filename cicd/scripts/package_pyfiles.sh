@@ -33,7 +33,7 @@ if [ -d "${workspace_source_path}" ]; then
 
     echo -e ${NOCOLOR} $(date) ${SCRIPT_LOG_STAMP} "downloading the ${REPOSITORY_NAME} dependencies...";
     pip3 install -q --upgrade pip || create_artifacts_error=true;
-    pip3 wheel --wheel-dir=wheelhouse -r "${workspace_emr_source_path}/requirements.txt" || create_artifacts_error=true;
+    pip3 wheel --wheel-dir=wheelhouse -r "${workspace_source_path}/requirements.txt" || create_artifacts_error=true;
 
     echo -e ${NOCOLOR} $(date) ${SCRIPT_LOG_STAMP} "move requirements.txt file to root";
     mv "${workspace_source_path}/requirements.txt" "${WORKSPACE}/artifact" || create_artifacts_error=true;
