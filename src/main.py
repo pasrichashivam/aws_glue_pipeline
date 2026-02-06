@@ -1,7 +1,7 @@
 
 import sys
 from pyspark.sql import SparkSession
-from awsglue_utils import getResolvedOptions
+from awsglue.utils import getResolvedOptions
 from zipfile import ZipFile
 import chispa
 
@@ -19,7 +19,6 @@ print("script_args:", script_args)
 base_path = '/tmp/'
 with ZipFile(f'{base_path}pyfiles.zip', 'r') as zip_ref:
     zip_ref.extractall(f'{base_path}extracted')
-
 
 sys.path.append(f'{base_path}extracted')
 
