@@ -1,6 +1,6 @@
 from airflow import DAG
 from datetime import datetime
-from airflow.providers.amazon.aws.operators.glue import AwsGlueJobOperator
+from airflow.providers.amazon.aws.operators.glue import GlueJobOperator
 
 # Default arguments for the DAG
 default_args = {
@@ -18,7 +18,7 @@ with DAG(
     schedule=None,
     catchup=False,
 ) as dag:
-    start_emr_job = AwsGlueJobOperator(
+    start_emr_job = GlueJobOperator(
         task_id="start_glue_job",
         job_name=job_name,
         script_args={

@@ -101,8 +101,13 @@ pipeline {
 
     stage("Copy DAGs to S3") {
       steps {
-          sh "aws s3 cp ${env.DAGS_PATH} s3://${env.AIRFLOW_BUCKET}/dags/ --recursive"
+          sh "aws s3 cp ${env.DAGS_PATH} s3://${env.AIRFLOW_BUCKET}/dags/${env.APP_NAME}/ --recursive"
       }
     }
   }
+  post { 
+      always { 
+        cleanWs() 
+      } 
+    }
 }

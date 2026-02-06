@@ -1,0 +1,8 @@
+spark_iceberg:
+  type: spark
+  application_name: SparkTeamsApp
+  catalog_name: AwsDataCatalog
+  extra_properties:
+    spark.sql.defaultCatalog: AwsDataCatalog
+    spark.sql.iceberg.check.ordering: false
+  

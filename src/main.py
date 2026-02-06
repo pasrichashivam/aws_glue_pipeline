@@ -27,7 +27,7 @@ output_db = f"{env}_analytics"
 output_table = "teams_processed"
 
 from transform import transform_data
-df = spark.read.csv(input_path, header=True)
+df = spark.read.csv(input_path, header=True, inferSchema=True)
 result_df = transform_data.transform(df)
 
 result_df.write.mode("append").format("parquet") \

@@ -1,36 +1,101 @@
+def setEnvByBranch(String branchName) {
+    if (branchName == 'develop') {
+        env.ENVIRONMENT = 'dev'
+    } else if (branchName=='stage') {
+        env.ENVIRONMENT = 'stage'
+    } else if (branchName=='production') {
+        env.ENVIRONMENT = 'pro'
+    }
+}
 pipeline {
   agent any
-
-  environment {
-    AWS_REGION = "us-east-1"
-    ENV = "dev"
+  environment{
+    CICD_PARAMS_FOLDER = "${env.WORKSPACE}/cicd/parameters"
+    SHELL_SCRIPTS_PATH = "${env.WORKSPACE}/cicd/scripts"
+    ARTIFACT_PATH = "${env.WORKSPACE}/artifact"
+    INFRA_PATH = "${env.WORKSPACE}/infra"
+    DAGS_PATH = "${env.WORKSPACE}/dags"
   }
 
   stages {
-
     stage("Checkout") {
       steps {
         checkout scm
       }
     }
-
-    stage("Terraform Init & Apply") {
+    stage("Branch Configuration") {
+      steps { 
+        script { 
+          sh "chmod +x -R ${env.SHELL_SCRIPTS_PATH}" 
+          if (!env.BRANCH_NAME) { 
+            env.TARGET_BRANCH = "develop" // or some default 
+            echo "THIS IS MANUAL DEPLOYMENT ON ${env.TARGET_BRANCH}" 
+          } else {
+            env.TARGET_BRANCH = env.BRANCH_NAME 
+            echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}" 
+          } 
+          if (env.TARGET_BRANCH == 'develop') {
+            env.ENVIRONMENT = 'dev' 
+          } else if (env.TARGET_BRANCH == 'stage') {
+            env.ENVIRONMENT = 'stage' 
+          } else if (env.TARGET_BRANCH == 'production') {
+            env.ENVIRONMENT = 'pro' 
+          } 
+          echo "SET ENV ON ${env.ENVIRONMENT}" 
+        } 
+      } 
+    }
+    stage("Setting Environment Variables") {
       steps {
-        sh """
-          cd terraform
-          terraform init
-          terraform apply -var-file=env/${ENV}.tfvars -auto-approve
-        """
+        script{
+
+          parameter_file_path = "${env.CICD_PARAMS_FOLDER}/parameters.groovy"
+          load "${parameter_file_path}"
+
+          parameter_file_path = "${env.CICD_PARAMS_FOLDER}/${env.ENVIRONMENT}/parameters.groovy"
+          load "${parameter_file_path}"
+
+          env.PROJECT_ENV_TFVARS = "${env.INFRA_PATH}/tfvars/${env.ENVIRONMENT}/deploy.tfvars"
+          env.PROJECT_TFVARS = "${env.INFRA_PATH}/tfvars/deploy.tfvars"
+        }
+      }
+    }
+    stage("Destroy appliction infrastructure") {
+      steps {
+        script {
+          def command = """
+            terraform -chdir=${env.INFRA_PATH} init \
+              -backend-config="bucket=${env.TFSTATE_S3_BUCKET}" \
+              -backend-config="key=${env.APP_NAME}/terraform.tfstate" \
+              -backend-config="region=${env.AWS_REGION}" \
+              -backend-config="dynamodb_table=${env.DYNAMODB_CICD_TABLE}"
+            
+            terraform -chdir=${env.INFRA_PATH} destroy \
+              -var-file=${env.PROJECT_ENV_TFVARS} \
+              -var-file=${env.PROJECT_TFVARS} \
+              -auto-approve
+          """
+          echo "Deploy App Infrastructure"
+          sh command
+        }
       }
     }
 
-    stage("Package Python Dependencies") {
+    stage("Remove Artifacts from S3") {
       steps {
-        sh """
-          chmod +x scripts/package_dependencies.sh
-          ./scripts/package_dependencies.sh ${ENV}
-        """
+          sh "aws s3 rm s3://${env.ARTIFACTS_BUCKET}/glue_jobs/${env.APP_NAME}/ --recursive"
       }
     }
+
+    stage("Remove DAGs from S3") {
+      steps {
+          sh "aws s3 rm s3://${env.AIRFLOW_BUCKET}/dags/${env.APP_NAME}/ --recursive"
+      }
+    }
+  }
+  post { 
+    always { 
+      cleanWs() 
+    } 
   }
 }
