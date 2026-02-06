@@ -42,7 +42,7 @@ if [ -d "${workspace_source_path}" ]; then
     mv "${workspace_source_path}/main.py" "${WORKSPACE}/artifact" || create_artifacts_error=true;
 
     echo -e ${NOCOLOR} $(date) ${SCRIPT_LOG_STAMP} "Creating zip of whl files";
-    zip -r "${WORKSPACE}/artifact/glue_job_whl_packages.gluewheels.zip" "${WORKSPACE}/wheelhouse/" || create_artifacts_error=true;
+    zip -r "glue_job_whl_packages.gluewheels.zip" "${WORKSPACE}/wheelhouse/" || create_artifacts_error=true;
 
     echo -e ${NOCOLOR} $(date) ${SCRIPT_LOG_STAMP} "creating zip from src ...";
     cd "${workspace_source_path}"
