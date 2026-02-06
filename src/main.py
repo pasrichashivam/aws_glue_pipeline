@@ -5,7 +5,7 @@ from awsglue.utils import getResolvedOptions
 from zipfile import ZipFile
 import chispa
 
-print("Chispa: ", chispa.__version__)
+print("Chispa: ", chispa)
 
 args = getResolvedOptions(sys.argv, ['ENV', 'script_args'])
 

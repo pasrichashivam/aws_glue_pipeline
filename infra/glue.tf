@@ -2,7 +2,7 @@ resource "aws_glue_job" "glue_job" {
   name = var.glue_job
 
   role_arn = "arn:aws:iam::${var.account}:role/${local.app_role_name}"
-  glue_version = "4.0"
+  glue_version = "5.0"
   worker_type = "G.1X"
   number_of_workers=2
   timeout=5
