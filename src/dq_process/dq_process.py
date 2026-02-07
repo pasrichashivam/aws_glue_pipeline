@@ -12,13 +12,13 @@ class DataQuality:
         self.output_table = "teams_processed"
         self.spark = SparkSession.builder.appName("dq-job").enableHiveSupport().getOrCreate()
 
-        with open('/tmp/extracted/metadata/dq_rules.yaml') as file_:
+        with open('/tmp/extracted/config/dq_rules.yaml') as file_:
             self.da_metadata =  yaml.safe_load(file_.read())['aa_teams']
     
     def run (self):
         table = f"{self.output_table}"
-        iceberg_table = f"{self.output_db}.{table}"
-        data = self.spark.sql(f"SELECT * FROM {iceberg_table}")
+        data_table = f"{self.output_db}.{table}"
+        data = self.spark.sql(f"SELECT * FROM {data_table}")
         
         self.dq_metadata['expectations']['expectation_suite_name'] = f"{self.output_db}_{self.output_table}"
         dq_process = DataQualityProcess(
