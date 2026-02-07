@@ -13,7 +13,7 @@ class DataQuality:
         self.spark = SparkSession.builder.appName("dq-job").enableHiveSupport().getOrCreate()
 
         with open('/tmp/extracted/config/dq_rules.yaml') as file_:
-            self.da_metadata =  yaml.safe_load(file_.read())['aa_teams']
+            self.dq_metadata =  yaml.safe_load(file_.read())['aa_teams']
     
     def run (self):
         table = f"{self.output_table}"
