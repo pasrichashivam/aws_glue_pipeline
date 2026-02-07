@@ -16,7 +16,7 @@ class DataQualityProcess:
             raise ValueError("data_quality_meta parameter should be a dict type")
         if 's3_checkpoints_uri' not in data_quality_meta:
             raise ValueError("s3_checkpoints_uri is not provided in data_quality_meta dict")
-        if 's3_expectations uri' not in data_quality_meta:
+        if 's3_expectations_uri' not in data_quality_meta:
             raise ValueError("s3_expectations_uri is not provided in data_quality_meta dict")
         if 's3_validations_uri' not in data_quality_meta:
             raise ValueError("s3_validations_uri is not provided in data_quality_meta dict")
