@@ -31,7 +31,7 @@ class TestMain(unittest.TestCase):
         "table_validations_prefix": "validation_prefix",
         "table_checkpoints_prefix": "checkpoints_prefix",
         "data_docs_prefix": "data_docs_prefix",
-        "downstream_dataproducts": [{'url': 'test_url', 'name': 'test_name'}],
+        "repository": [{'url': 'test_url', 'name': 'test_name'}],
         "critical_expectation_suite": [],
         }
         mock_context = MagicMock()
@@ -48,7 +48,7 @@ class TestMain(unittest.TestCase):
             "s3_expectations_uri": "expectations_prefix",
             "s3_validations_uri": "validations_prefix",
             "data_docs_prefix": "data_docs_prefix",
-            "downstream dataproducts": [{'url': 'test_url', 'name': 'test_name'}],
+            "repository": [{'url': 'test_url', 'name': 'test_name'}],
             "expectations": {
                 "expectation_suite_name": "test_suite",
                 "rules": []

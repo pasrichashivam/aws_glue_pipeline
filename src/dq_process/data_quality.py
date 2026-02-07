@@ -28,8 +28,8 @@ class DataQualityProcess:
             raise ValueError("rules is not provided under expectations")
         if 'data_docs_prefix' not in data_quality_meta:
             raise ValueError("data_docs_prefix is not provided in data_quality _meta dict")
-        if 'downstream_dataproducts' not in data_quality_meta:
-            raise ValueError("downstream_dataproducts is not provided in data_quality_meta dict")
+        if 'repository' not in data_quality_meta:
+            raise ValueError("repository is not provided in data_quality_meta dict")
         
         self.database = database
         self.table = table
@@ -44,7 +44,7 @@ class DataQualityProcess:
         self.table_checkpoints_prefix = self.dq_dict["table_checkpoints_prefix"]
         self.critical_expectation_suite = self.dq_dict["critical_expectation_suite"]
         self.data_docs_prefix = self.dq_dict["data_does_prefix"]
-        self.downstream_dataproducts = self.dq_dict ["downstream_dataproducts"]
+        self.repository = self.dq_dict ["repository"]
 
     def run(self, data: DataFrame):
         context = self.create_and_save_expectation_suite(data)

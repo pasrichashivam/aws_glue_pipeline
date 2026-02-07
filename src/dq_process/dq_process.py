@@ -12,7 +12,7 @@ class DataQuality:
         self.output_table = "teams_processed"
         self.spark = SparkSession.builder.appName("dq-job").enableHiveSupport().getOrCreate()
 
-        with open('metadata/da_rules.yaml') as file_:
+        with open('metadata/dq_rules.yaml') as file_:
             self.da_metadata =  yaml.safe_load(file_.read())['']
     
     def run (self):
@@ -25,8 +25,9 @@ class DataQuality:
             self.dq_metadata, 'glue-job-artifacts-dev', self.output_db,
             self.output_table)
         dq_process.run(data)
+        print("results:", dq_process.parsed_results)
         
-        if dq_process.parsed_results['success_critical_percentage'] < 1 and dq_alert_recipients:
-            template_path = f"{os.environ.get('PROJECT_PATH')}/templates/dq.html"
-            dq_process.send_report(template_path, dq_alert_recipients)
-        print(f"Completed Data Quality process with the following results {dq_process.parsed_results}")
+        # if dq_process.parsed_results['success_critical_percentage'] < 1 and dq_alert_recipients:
+        #     template_path = f"{os.environ.get('PROJECT_PATH')}/templates/dq.html"
+        #     dq_process.send_report(template_path, dq_alert_recipients)
+        # print(f"Completed Data Quality process with the following results {dq_process.parsed_results}")

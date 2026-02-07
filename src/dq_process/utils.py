@@ -40,7 +40,7 @@ def parse_expectations_metadata(
         validation_prefix = dq_metadata['s3_validations_uri']
         checkpoints_prefix = dq_metadata['s3_checkpoints_uri']
         data_docs_prefix = dq_metadata['data_docs_prefix'] 
-        downstream_dataproducts = dq_metadata['downstream_dataproducts']
+        repository = dq_metadata['repository']
         return {
             "expectations_suite_name": expectation_suite_name,
             "expectations_suite": expectations_suite,
@@ -50,7 +50,7 @@ def parse_expectations_metadata(
             "table_checkpoints_prefix": checkpoints_prefix,
             "critical_expectation_suite": critical_expectation_suite,
             "data_docs_prefix": data_docs_prefix,
-            "downstream_dataproducts": downstream_dataproducts
+            "repository": repository
         }
     except Exception:
         raise Exception(f'ERROR in {inspect.currentframe().f_code.co_name}: {traceback. format_exc()}')
@@ -243,7 +243,7 @@ def get_alert_message_body(template_path: str, parsed_information: dict, html=Tr
     
     def str_downstreams():
         downstreams = '<ol>'
-        for pipeline in parsed_information['downstream_dataproducts']:
+        for pipeline in parsed_information['repository']:
             downstreams += f"<li><a href= {pipeline['url']}>" + pipeline['name'] + '</a></1i>'
         downstreams += '</ol>' 
         return downstreams

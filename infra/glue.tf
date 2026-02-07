@@ -14,7 +14,7 @@ resource "aws_glue_job" "glue_job" {
     "--additional-python-modules" = "s3://${var.artifacts_bucket}/glue_jobs/${var.app_name}/glue_job_whl_packages.gluewheels.zip"
     "--python-modules-installer-option" = "--no-index"
     "--ENV" = var.environment
-    "--script_args" = "arg_1"
+    "--task" = "dq"
   }
 
   command {
