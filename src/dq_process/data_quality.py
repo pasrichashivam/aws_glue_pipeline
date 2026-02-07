@@ -43,7 +43,7 @@ class DataQualityProcess:
         self.table_validation_prefix = self.dq_dict["table_validations_prefix"]
         self.table_checkpoints_prefix = self.dq_dict["table_checkpoints_prefix"]
         self.critical_expectation_suite = self.dq_dict["critical_expectation_suite"]
-        self.data_docs_prefix = self.dq_dict["data_does_prefix"]
+        self.data_docs_prefix = self.dq_dict["data_docs_prefix"]
         self.repository = self.dq_dict ["repository"]
 
     def run(self, data: DataFrame):
